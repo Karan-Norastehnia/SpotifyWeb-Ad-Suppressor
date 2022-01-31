@@ -38,12 +38,12 @@ pathLib = {
         /div/div[3]/button
         ''',
 
-    'TRACK_TITLE':
+    'TRACK_BAR':
         '''
-        /html/body/div[4]
-        /div/div[2]/div[2]/footer
-        /div/div[1]/div/div[2]
-        /div[1]/div/div/div/div/span/a
+        /html/body
+        /div[4]/div
+        /div[2]/div[2]
+        /footer
         ''',
 
     'PLAYBACK_DURATION':

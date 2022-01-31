@@ -1,4 +1,3 @@
-from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
@@ -8,16 +7,13 @@ from paths import pathLib
 import time
 import random
 
-user = input('Enter Username: ')
-pwd = input('Enter Password: ')
+#user = input('Enter Username: ')
+#pwd = input('Enter Password: ')
 
 url = 'https://open.spotify.com/'
 
 driver = webdriver.Chrome()
 driver.get(url)
-page = driver.page_source
-
-data = BeautifulSoup(page, 'html.parser')   
 
 def login(username, password):
 
@@ -62,49 +58,28 @@ def login(username, password):
         driver.find_element_by_xpath(pathLib['LOGIN_BUTTON'])
     ).perform()
 
-def isMute():
-    for tag in data.find_all('button'):
-        try: tag.get('class')
-        except: continue
-        if not 'volume-bar__icon-button' in tag.get('class'): continue
-
-        if 'Mute' in tag.get('aria-label'): return False
-        else: return True
-
-def isAdvertisement():
-    for tag in data.find_all('footer'):
-        try: tag.get('data-testadtype')
-        except: continue
-
-        if 'ad-type-none' in tag.get('data-testadtype'): return False
-        else: return True
-
-login(user, pwd)
+#login(user, pwd)
 
 while True:
-    time.sleep(0.2)
+    time.sleep(0.1)
 
-    pbPos = driver.find_element_by_xpath(
-        pathLib['PLAYBACK_POSITION']).text
-    pbDur = driver.find_element_by_xpath(
-        pathLib['PLAYBACK_DURATION']).text
+    try:
+        Advertisement = driver.find_element(
+            By.XPATH, pathLib['TRACK_BAR']).get_attribute('data-testadtype')
+        Mute = driver.find_element(
+            By.XPATH, pathLib['MUTE_BUTTON']).get_attribute('aria-label')
+    except: continue
 
-    if pbPos == pbDur:
-        while pbPos != pbDur:
-            pbPos = driver.find_element_by_xpath(
-            pathLib['PLAYBACK_POSITION']).text
-            pbDur = driver.find_element_by_xpath(
-            pathLib['PLAYBACK_DURATION']).text
-            time.sleep(0.2)
+    if Advertisement == 'ad-type-none': isAdvertisement = False
+    else: isAdvertisement = True
+    if Mute == 'Mute': isMute = False
+    else: isMute = True
 
-        isA = isAdvertisement()
-        isM = isMute()
-
-        if isA and not isM:
-            ActionChains(driver).click(
-                driver.find_element_by_xpath(pathLib['MUTE_BUTTON'])
-            ).perform()
-        elif not isA and isM:
-            ActionChains(driver).click(
-                driver.find_element_by_xpath(pathLib['MUTE_BUTTON'])
-            ).perform()
+    if isAdvertisement and not isMute:
+        ActionChains(driver).click(
+            driver.find_element_by_xpath(pathLib['MUTE_BUTTON'])
+        ).perform()
+    elif not isAdvertisement and isMute:
+        ActionChains(driver).click(
+            driver.find_element_by_xpath(pathLib['MUTE_BUTTON'])
+        ).perform()

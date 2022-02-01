@@ -19,13 +19,13 @@ def login(username, password):
 
     # Go to login page
     ActionChains(driver).click(
-        driver.find_element_by_xpath(pathLib['LOGIN_PAGE'])
+        driver.find_element(By.XPATH, pathLib['LOGIN_PAGE'])
     ).perform()
 
     # Wait until new page is available
     while True:
         try:
-            driver.find_element_by_xpath(pathLib['USERNAME_BOX'])
+            driver.find_element(By.XPATH, pathLib['USERNAME_BOX'])
             break
         except: time.sleep(3)
 
@@ -34,7 +34,7 @@ def login(username, password):
     # Fill email address
     for char in username:
         ActionChains(driver).send_keys_to_element(
-            driver.find_element_by_xpath(pathLib['USERNAME_BOX']),
+            driver.find_element(By.XPATH, pathLib['USERNAME_BOX']),
             char
         ).perform()
 
@@ -45,7 +45,7 @@ def login(username, password):
     # Fill password
     for char in password:
         ActionChains(driver).send_keys_to_element(
-            driver.find_element_by_xpath(pathLib['PASSWORD_BOX']),
+            driver.find_element(By.XPATH, pathLib['PASSWORD_BOX']),
             char
         ).perform()
 
@@ -55,7 +55,7 @@ def login(username, password):
 
     # Click on login button
     ActionChains(driver).click(
-        driver.find_element_by_xpath(pathLib['LOGIN_BUTTON'])
+        driver.find_element(By.XPATH, pathLib['LOGIN_BUTTON'])
     ).perform()
 
 #login(user, pwd)
@@ -78,19 +78,19 @@ while True:
     absDur = (int(pbDur.split(':')[0]) * 60) + (int(pbDur.split(':')[1]))
     absPos = (int(pbPos.split(':')[0]) * 60) + (int(pbPos.split(':')[1]))
 
-    if absDur > 5 and (absDur - absPos) > 5:
-        time.sleep(absDur - absPos)
-
     if Advertisement == 'ad-type-none': isAdvertisement = False
     else: isAdvertisement = True
     if Mute == 'Mute': isMute = False
     else: isMute = True
 
+    if not isAdvertisement and absDur > 5 and (absDur - absPos) > 5:
+        time.sleep((absDur - absPos) - 3)
+
     if isAdvertisement and not isMute:
         ActionChains(driver).click(
-            driver.find_element_by_xpath(pathLib['MUTE_BUTTON'])
+            driver.find_element(By.XPATH, pathLib['MUTE_BUTTON'])
         ).perform()
     elif not isAdvertisement and isMute:
         ActionChains(driver).click(
-            driver.find_element_by_xpath(pathLib['MUTE_BUTTON'])
+            driver.find_element(By.XPATH, pathLib['MUTE_BUTTON'])
         ).perform()

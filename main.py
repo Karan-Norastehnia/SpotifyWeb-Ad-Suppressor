@@ -68,7 +68,18 @@ while True:
             By.XPATH, pathLib['TRACK_BAR']).get_attribute('data-testadtype')
         Mute = driver.find_element(
             By.XPATH, pathLib['MUTE_BUTTON']).get_attribute('aria-label')
+
+        pbDur = driver.find_element(
+            By.XPATH, pathLib['PLAYBACK_DURATION']).text
+        pbPos = driver.find_element(
+            By.XPATH, pathLib['PLAYBACK_POSITION']).text
     except: continue
+
+    absDur = (int(pbDur.split(':')[0]) * 60) + (int(pbDur.split(':')[1]))
+    absPos = (int(pbPos.split(':')[0]) * 60) + (int(pbPos.split(':')[1]))
+
+    if absDur > 5 and (absDur - absPos) > 5:
+        time.sleep(absDur - absPos)
 
     if Advertisement == 'ad-type-none': isAdvertisement = False
     else: isAdvertisement = True
